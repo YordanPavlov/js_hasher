@@ -48,9 +48,9 @@ function printHash(hashBuffer) {
 
 function showFile(){
   let fileType = file.type; //getting selected file type
-  let validExtensions = ["application/pdf"]; //adding some valid image extensions in array
+  let validExtensions = ["application/pdf"];
   console.log("File type is: ", fileType)
-  if(validExtensions.includes(fileType)){ //if user selected file is an image file
+  if(validExtensions.includes(fileType)){
     let fileReader = new FileReader(); //creating new FileReader object
     fileReader.onload = ()=>{
       let fileData = fileReader.result; //passing user file source in fileURL variable
