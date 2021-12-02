@@ -44,10 +44,26 @@ function printHash(hashBuffer) {
   // Generate a random is present or not value based on the last byte of the hash
   const isPresent = hashArray[hashArray.length - 1] % 2 === 0;
 
-    // convert bytes to hex string
+  // convert bytes to hex string
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  const hexPlusPresentResult = isPresent ? hashHex.concat("<br/> <font color=\"green\">Is a valid document</font> ")
-  : hashHex.concat( "<br/> <font color=\"red\">Is NOT a valid document</font>");
+  let hexPlusPresentResult = ""
+
+  if (isPresent) {
+    // For test purpose, generate a date one year ago.
+    let oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    hexPlusPresentResult = hashHex.concat("<br/> <font color=\"green\">Is a valid document</font>")
+    .concat(`Document was audited on: <br/> ${oneYearAgo}`);
+  }
+  else {
+    // For test purpose, generate a date one month ago.
+    let oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+
+    hexPlusPresentResult = hashHex.concat( "<br/> <font color=\"red\">Is NOT a valid document</font>")
+    .concat(`Document was invalidated on: <br/> ${oneMonthAgo}`);
+  }
 
   dropArea.innerHTML = hexPlusPresentResult;
 }
