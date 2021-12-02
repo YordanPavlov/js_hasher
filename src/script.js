@@ -41,29 +41,27 @@ dropArea.addEventListener("drop", (event)=>{
 function printHash(hashBuffer) {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
 
+  // Generate a random is present or not value based on the last byte of the hash
+  const isPresent = hashArray[hashArray.length - 1] % 2 === 0;
+
     // convert bytes to hex string
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  dropArea.innerHTML = hashHex
+  const hexPlusPresentResult = isPresent ? hashHex.concat("<br/> <font color=\"green\">Is a valid document</font> ")
+  : hashHex.concat( "<br/> <font color=\"red\">Is NOT a valid document</font>");
+
+  dropArea.innerHTML = hexPlusPresentResult;
 }
 
 function showFile(){
   let fileType = file.type; //getting selected file type
-  let validExtensions = ["application/pdf"];
-  console.log("File type is: ", fileType)
-  if(validExtensions.includes(fileType)){
-    let fileReader = new FileReader(); //creating new FileReader object
-    fileReader.onload = ()=>{
-      let fileData = fileReader.result; //passing user file source in fileURL variable
-      crypto.subtle.digest('SHA-256', fileData).then(hashBuffer => {
-        printHash(hashBuffer)
-      })
-      //let imgTag = `<img src="${fileURL}" alt="">`; //creating an img tag and passing user selected file source inside src attribute
-      //dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
-    }
-    fileReader.readAsArrayBuffer(file);
-  }else{
-    alert("This is not an PDF File!");
-    dropArea.classList.remove("active");
-    dragText.textContent = "Drag & Drop to Upload File";
+  let fileReader = new FileReader(); //creating new FileReader object
+  fileReader.onload = ()=>{
+    let fileData = fileReader.result; //passing user file source in fileURL variable
+    crypto.subtle.digest('SHA-256', fileData).then(hashBuffer => {
+      printHash(hashBuffer)
+    })
+    //let imgTag = `<img src="${fileURL}" alt="">`; //creating an img tag and passing user selected file source inside src attribute
+    //dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
   }
+  fileReader.readAsArrayBuffer(file);
 }
